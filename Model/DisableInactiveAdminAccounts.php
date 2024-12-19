@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-namespace Model;
+namespace Aligent\Pci4Compatibility\Model;
 
 use DateInterval;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
@@ -11,7 +11,7 @@ use Magento\User\Model\ResourceModel\User\CollectionFactory as UserCollectionFac
 use Magento\User\Model\User;
 use Psr\Log\LoggerInterface;
 
-class InvalidateInactiveUsers
+class DisableInactiveAdminAccounts
 {
     private const INACTIVE_DAYS = 90;
 
