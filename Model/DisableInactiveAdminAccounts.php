@@ -6,7 +6,6 @@ namespace Aligent\Pci4Compatibility\Model;
 use DateInterval;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\User\Model\ResourceModel\User as UserResource;
-use Magento\User\Model\ResourceModel\User\Collection as UserCollection;
 use Magento\User\Model\ResourceModel\User\CollectionFactory as UserCollectionFactory;
 use Magento\User\Model\User;
 use Psr\Log\LoggerInterface;
@@ -49,7 +48,7 @@ class DisableInactiveAdminAccounts
             return;
         }
 
-        /** @var UserCollection $userCollection */
+        // find users that have been inactive for 90 days
         $userCollection = $this->userCollectionFactory->create();
         // don't need to disable accounts that are already disabled
         $userCollection->addFieldToFilter('status', '1');
@@ -57,16 +56,33 @@ class DisableInactiveAdminAccounts
         $users = $userCollection->getItems();
         foreach ($users as $user) {
             /** @var User $user */
-            $user->setData('status', 0);
-            $username = $user->getData('username');
-            try {
-                $this->userResource->save($user);
-            } catch (\Exception $e) {
-                $this->logger->critical(
-                    __METHOD__ . ": Could not disable account for user {$username} :" . $e->getMessage(),
-                    ['exception' => $e]
-                );
-            }
+            $this->disableUserAccount($user);
+        }
+
+        // find user accounts older than 90 days that have never logged in
+        $userCollection = $this->userCollectionFactory->create();
+        $userCollection->addFieldToFilter('status', '1');
+        $userCollection->addFieldToFilter('logdate', ['null' => true]);
+        $userCollection->addFieldToFilter('created', ['lt' => $utcDateTime]);
+        $users = $userCollection->getItems();
+        foreach ($users as $user) {
+            /** @var User $user */
+            $this->disableUserAccount($user);
+        }
+    }
+
+    private function disableUserAccount(User $user): void
+    {
+        $user->setData('status', 0);
+        $username = $user->getData('username');
+        try {
+            $this->userResource->save($user);
+            $this->logger->info("Account for user $username has been disabled.");
+        } catch (\Exception $e) {
+            $this->logger->critical(
+                __METHOD__ . ": Could not disable account for user $username :" . $e->getMessage(),
+                ['exception' => $e]
+            );
         }
     }
 }
