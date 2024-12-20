@@ -4,6 +4,7 @@
     <module name="Aligent_Pci4Compatibility">
         <sequence>
             <module name="Magento_Backend"/>
+            <module name="Magento_User"/>
         </sequence>
     </module>
 </config>
