@@ -2,8 +2,8 @@
 declare(strict_types=1);
 
 use Magento\TestFramework\Helper\Bootstrap;
-use Magento\User\Model\User;
 use Magento\User\Model\ResourceModel\User as UserResource;
+use Magento\User\Model\User;
 
 $objectManager = Bootstrap::getObjectManager();
 
