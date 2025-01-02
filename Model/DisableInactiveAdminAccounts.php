@@ -38,8 +38,11 @@ class DisableInactiveAdminAccounts
     public function execute(): void
     {
         try {
-            $currentDate = $this->localeDate->date()->sub(new DateInterval('P' . self::INACTIVE_DAYS . 'D'));
-            $utcDateTime = $this->localeDate->convertConfigTimeToUtc($currentDate);
+            $currentDate = $this->localeDate->date();
+            $currentDateUtc = $currentDate->setTimezone(new \DateTimeZone('UTC'));
+            $utcDateTime = $currentDateUtc->sub(new DateInterval('P' . self::INACTIVE_DAYS . 'D'));
+            $utcDateTime = $utcDateTime->format('Y-m-d H:i:s');
+            echo("UTC Datetime: " . $utcDateTime . "\n");
         } catch (\Exception $e) {
             $this->logger->critical(
                 __METHOD__ . ': Could not get cutoff date for inactivity: ' . $e->getMessage(),
@@ -51,7 +54,7 @@ class DisableInactiveAdminAccounts
         // find users that have been inactive for 90 days
         $userCollection = $this->userCollectionFactory->create();
         // don't need to disable accounts that are already disabled
-        $userCollection->addFieldToFilter('status', '1');
+        $userCollection->addFieldToFilter('is_active', '1');
         $userCollection->addFieldToFilter('logdate', ['lt' => $utcDateTime]);
         $users = $userCollection->getItems();
         foreach ($users as $user) {
@@ -61,7 +64,7 @@ class DisableInactiveAdminAccounts
 
         // find user accounts older than 90 days that have never logged in
         $userCollection = $this->userCollectionFactory->create();
-        $userCollection->addFieldToFilter('status', '1');
+        $userCollection->addFieldToFilter('is_active', '1');
         $userCollection->addFieldToFilter('logdate', ['null' => true]);
         $userCollection->addFieldToFilter('created', ['lt' => $utcDateTime]);
         $users = $userCollection->getItems();
@@ -73,7 +76,7 @@ class DisableInactiveAdminAccounts
 
     private function disableUserAccount(User $user): void
     {
-        $user->setData('status', 0);
+        $user->setData('is_active', 0);
         $username = $user->getData('username');
         try {
             $this->userResource->save($user);
