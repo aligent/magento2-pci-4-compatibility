@@ -42,7 +42,6 @@ class DisableInactiveAdminAccounts
             $currentDateUtc = $currentDate->setTimezone(new \DateTimeZone('UTC'));
             $utcDateTime = $currentDateUtc->sub(new DateInterval('P' . self::INACTIVE_DAYS . 'D'));
             $utcDateTime = $utcDateTime->format('Y-m-d H:i:s');
-            echo("UTC Datetime: " . $utcDateTime . "\n");
         } catch (\Exception $e) {
             $this->logger->critical(
                 __METHOD__ . ': Could not get cutoff date for inactivity: ' . $e->getMessage(),
