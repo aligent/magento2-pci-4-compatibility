@@ -1,0 +1,31 @@
+on:
+  push:
+    tags:
+      - '[0-9].*'
+
+name: Create Release
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+
+      - name: Update Packagist
+        env:
+          API_TOKEN: ${{ secrets.PackagistApiToken }}
+        run: curl -XPOST -H'content-type:application/json' 'https://packagist.org/api/update-package?username=aligent&apiToken='$API_TOKEN -d'{"repository":{"url":"https://packagist.org/packages/aligent/magento2-pci-4-compatibility"}}'
