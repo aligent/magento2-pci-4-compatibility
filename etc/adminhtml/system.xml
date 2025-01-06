@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="admin">
+            <group id="security">
+                <field id="session_lifetime">
+                    <comment>Please enter at least 60 and at most 900 (15 minutes).</comment>
+                    <validate>required-entry validate-digits validate-digits-range digits-range-60-900</validate>
+                </field>
+                <field id="lockout_failures">
+                    <comment>Must be less than or equal to 10</comment>
+                    <validate>required-entry validate-digits digits-range 1-10</validate>
+                </field>
+                <field id="lockout_threshold" translate="label comment">
+                    <comment>Must be at least 30 minutes</comment>
+                    <validate>required-entry validate-digits digits-range-30-525600</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
