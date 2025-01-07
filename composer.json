@@ -2,7 +2,7 @@
     "name": "aligent/magento2-pci-4-compatibility",
     "description": "Provide compatibility with PCI DSS 4.0 requirements",
     "require": {
-        "php": "^8.2.0|^8.3.0"
+        "php": "^8.1.0|^8.2.0|^8.3.0"
     },
     "type": "magento2-module",
     "license": [
