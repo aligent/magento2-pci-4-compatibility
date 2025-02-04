@@ -1,6 +1,6 @@
 # Magento 2 PCI DSS 4.0 Compatibility
 
-A Magento 2 module to bring it in-line with the [PCI DSS 4.0 requirements](https://east.pcisecuritystandards.org/document_library?category=pcidss&document=pci_dss), with changes covering the following requirements:
+A Magento 2 module to bring the use of admin accounts in-line with the [PCI DSS 4.0 requirements](https://east.pcisecuritystandards.org/document_library?category=pcidss&document=pci_dss), with changes covering the following requirements:
 * 8.2.6
    * Inactive user accounts are removed or disabled within 90 days of inactivity
 * 8.2.8
