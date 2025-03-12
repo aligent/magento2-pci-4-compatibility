@@ -38,10 +38,16 @@ class DisableInactiveAccounts extends Command
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln(__("Disabling any admin accounts with 90 days of inactivity"));
-        $this->disableInactiveAdminAccounts->execute();
-        $output->writeln(__("Disabling of accounts complete"));
+        try {
+            $output->writeln(__("Disabling any admin accounts with 90 days of inactivity"));
+            $this->disableInactiveAdminAccounts->execute();
+            $output->writeln(__("Disabling of accounts complete"));
+            return Command::SUCCESS;
+        } catch (\Throwable $t) {
+            $output->writeln(__("<error>Error: {$e->getMessage()}</error>"));
+            return Command::FAILURE;
+        }
     }
 }
