@@ -9,7 +9,7 @@
                 </field>
                 <field id="lockout_failures">
                     <comment>Must be less than or equal to 10</comment>
-                    <validate>required-entry validate-digits validate-digits-range digits-range 1-10</validate>
+                    <validate>required-entry validate-digits validate-digits-range digits-range-1-10</validate>
                 </field>
                 <field id="lockout_threshold" translate="label comment">
                     <comment>Must be at least 30 minutes</comment>
