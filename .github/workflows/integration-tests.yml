@@ -74,7 +74,7 @@ jobs:
         image: ${{ matrix.opensearch }}
         env:
           discovery.type: single-node
-          OPENSEARCH_INITIAL_ADMIN_PASSWORD: admin
+          OPENSEARCH_INITIAL_ADMIN_PASSWORD: !CorrectHorseBatteryStaple1
         options: >-
           --health-cmd "curl http://localhost:9200/_cluster/health"
           --health-interval 10s
