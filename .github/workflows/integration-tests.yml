@@ -21,13 +21,14 @@ jobs:
             "magento/project-community-edition:>=2.4.5 <2.4.6",
             "magento/project-community-edition:>=2.4.6 <2.4.7",
             "magento/project-community-edition:>=2.4.7 <2.4.8",
+            "magento/project-community-edition:>=2.4.8 <2.4.9"
           ]
         include:
           - magento: magento/project-community-edition:>=2.4.4 <2.4.5
             php: 8.1
             composer: 2.2
             mysql: "mariadb:10.5"
-            elasticsearch: "elasticsearch:7.17.9"
+            opensearch: "elasticsearch:7.17.9"
             rabbitmq: "rabbitmq:3.9-management"
             redis: "redis:7.2"
             job_title: "2.4.4"
@@ -36,7 +37,7 @@ jobs:
             php: 8.1
             composer: 2.2
             mysql: "mariadb:10.5"
-            elasticsearch: "elasticsearch:7.17.9"
+            opensearch: "opensearchproject/opensearch:2.19.1"
             rabbitmq: "rabbitmq:3.13-management"
             redis: "redis:7.2"
             job_title: "2.4.5"
@@ -45,23 +46,32 @@ jobs:
             php: 8.2
             composer: 2.2
             mysql: "mariadb:10.6"
-            elasticsearch: "elasticsearch:7.17.9"
+            opensearch: "opensearchproject/opensearch:2.19.1"
             rabbitmq: "rabbitmq:3.13-management"
             redis: "redis:7.2"
             job_title: "2.4.6"
 
           - magento: magento/project-community-edition:>=2.4.7 <2.4.8
             php: 8.3
-            composer: 2.7
+            composer: 2.8
             mysql: "mariadb:10.6"
-            elasticsearch: "elasticsearch:7.17.9"
+            opensearch: "opensearchproject/opensearch:2.19.1"
             rabbitmq: "rabbitmq:3.13-management"
             redis: "redis:7.2"
             job_title: "2.4.7"
 
+          - magento: magento/project-community-edition:>=2.4.8 <2.4.9
+            php: 8.4
+            composer: 2.8
+            mysql: "mariadb:11.4"
+            opensearch: "opensearchproject/opensearch:2.19.1"
+            rabbitmq: "rabbitmq:4-management"
+            redis: "valkey:8"
+            job_title: "2.4.8"
+
     services:
-      elasticsearch:
-        image: ${{ matrix.elasticsearch }}
+      opensearch:
+        image: ${{ matrix.opensearch }}
         env:
           discovery.type: single-node
         options: >-
@@ -150,7 +160,7 @@ jobs:
           sed -i "s/'db-host' => 'localhost'/'db-host' => '127.0.0.1'/" etc/install-config-mysql.php.dist
           sed -i "s/'db-user' => 'root'/'db-user' => 'user'/" etc/install-config-mysql.php.dist
           sed -i "s/'db-password' => '123123q'/'db-password' => 'password'/" etc/install-config-mysql.php.dist
-          sed -i "s/'elasticsearch-host' => 'localhost'/'elasticsearch-host' => '127.0.0.1'/" etc/install-config-mysql.php.dist
+          sed -i "s/'opensearch-host' => 'localhost'/'opensearch-host' => '127.0.0.1'/" etc/install-config-mysql.php.dist
           sed -i "s/'amqp-host' => 'localhost'/'amqp-host' => '127.0.0.1'/" etc/install-config-mysql.php.dist
 
       - run: ../../../vendor/bin/phpunit ../../../vendor/aligent/magento2-pci-4-compatibility/Test/Integration
