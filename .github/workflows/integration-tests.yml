@@ -63,7 +63,7 @@ jobs:
           - magento: magento/project-community-edition:>=2.4.8 <2.4.9
             php: 8.4
             composer: 2.8
-            mysql: "mariadb:11.4"
+            mysql: "mariadb:10.6"
             opensearch: "opensearchproject/opensearch:2.19.1"
             rabbitmq: "rabbitmq:4-management"
             redis: "valkey:8"
