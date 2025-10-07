@@ -1,0 +1,54 @@
+<?php
+
+use Aligent\Pci4Compatibility\Block\Adminhtml\Modal;
+use Magento\Framework\Escaper;
+
+/**
+ * @var Escaper $escaper
+ * @var Modal $block
+ */
+
+$sessionTimeout = $block->getModalPopupTimeout();
+
+?>
+
+<div id="session-expire-warning-modal">
+    <p style="font-size:48px;color:#FF0000">&#x26A0;</p>
+    <p>Your admin session will expire in one minute, please save your changes or refresh the page.</p>
+</div>
+
+<script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal',
+        ],
+        function(
+            $,
+            modal
+        ) {
+            var options = {
+                type: 'popup',
+                innerScroll: true,
+                title: false,
+                modalClass:'modal-admintimeout',
+                buttons: [{
+                    text: $.mage.__('Close'),
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            };
+            $(document).ready(function(){
+                modal(options, $('#session-expire-warning-modal'));
+                setTimeout(
+                    function() {
+                        $('#session-expire-warning-modal').modal('openModal')
+                    },
+                    <?= $sessionTimeout ?>
+                );
+            });
+        }
+    );
+</script>
