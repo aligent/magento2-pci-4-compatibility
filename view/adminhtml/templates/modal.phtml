@@ -1,14 +1,18 @@
 <?php
 
-use Aligent\Pci4Compatibility\Block\Adminhtml\Modal;
+use CountryCareGroup\Service\ViewModel\Modal;
+use Magento\Catalog\Block\Product\View;
 use Magento\Framework\Escaper;
 
 /**
+ * @var View $block
  * @var Escaper $escaper
- * @var Modal $block
+ * @var Modal $viewModel
  */
 
 $sessionTimeout = $block->getModalPopupTimeout();
+$viewModel = $block->getViewModel();
+$modalTimeout = $viewModel->getModalPopupTimeout();
 
 ?>
 
@@ -46,7 +50,7 @@ $sessionTimeout = $block->getModalPopupTimeout();
                     function() {
                         $('#session-expire-warning-modal').modal('openModal')
                     },
-                    <?= $sessionTimeout ?>
+                    <?= $modalTimeout ?>
                 );
             });
         }

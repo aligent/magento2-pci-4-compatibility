@@ -2,26 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Aligent\Pci4Compatibility\Block\Adminhtml;
+namespace Aligent\Pci4Compatibility\ViewModel;
 
-use Magento\Backend\Block\Template;
-use Magento\Backend\Block\Template\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\View\Element\Block\ArgumentInterface;
 
-class Modal extends Template
+class Modal implements ArgumentInterface
 {
     /**
      * Constructor
-     * @param Context $context
      * @param ScopeConfigInterface $scopeConfig
-     * @param array $data
      */
     public function __construct(
-        Context $context,
-        ScopeConfigInterface $scopeConfig,
-        array $data = []
+        private readonly ScopeConfigInterface $scopeConfig,
     ) {
-        parent::__construct($context, $data);
     }
 
     /**
@@ -31,13 +25,13 @@ class Modal extends Template
      */
     public function getModalPopupTimeout(): int
     {
-        // Session lifetime in seconds
-        $sessionTimeout = $this->_scopeConfig->getValue(
+        // This value is in seconds
+        $sessionTimeout = $this->scopeConfig->getValue(
             'admin/security/session_lifetime',
             ScopeConfigInterface::SCOPE_TYPE_DEFAULT
         );
 
-        // We want the popup to appear one minute before the timeout (in ms)
+        // Then we want the popup to appear one minute before timeout
         return ($sessionTimeout - 60) * 1000;
     }
 }
