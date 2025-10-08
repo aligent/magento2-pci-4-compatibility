@@ -19,7 +19,7 @@ class Modal implements ArgumentInterface
     }
 
     /**
-     * Returns the time in ms after refresh when the session expiry warning modal should appear
+     * Returns the duration in ms after refresh when the session expiry warning modal should appear
      *
      * @return int
      */
