@@ -2,7 +2,11 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="page.main.actions">
-            <block class="Aligent\Pci4Compatibility\Block\Adminhtml\Modal" name="session.expiry.modal" as="modal" template="Aligent_Pci4Compatibility::modal.phtml"/>
+            <block class="Magento\Backend\Block\Template" name="session.expiry.modal" as="modal" template="Aligent_Pci4Compatibility::modal.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Aligent\Pci4Compatibility\ViewModel\Modal</argument>
+                </arguments>
+            </block>
         </referenceContainer>
     </body>
 </page>
