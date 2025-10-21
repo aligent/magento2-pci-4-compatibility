@@ -38,7 +38,8 @@ $extendSessionUrl = $viewModel->getExtendSessionUrl();
         ],
         function(
             $,
-            modal
+            modal,
+            $t
         ) {
             let sessionTimeoutHandle = null;
             const sessionLifetime = parseInt($('#session-lifetime').val()) || 900;
@@ -51,18 +52,18 @@ $extendSessionUrl = $viewModel->getExtendSessionUrl();
                 const options = {
                     type: 'popup',
                     innerScroll: true,
-                    title: $.mage.__('Session Expiring Soon'),
+                    title: $t('Session Expiring Soon'),
                     modalClass: 'modal-admintimeout',
                     buttons: [
                         {
-                            text: $.mage.__('Extend Session'),
+                            text: $t('Extend Session'),
                             class: 'action-primary',
                             click: function () {
                                 extendSession(this);
                             }
                         },
                         {
-                            text: $.mage.__('Close'),
+                            text: $t('Close'),
                             class: 'action-secondary',
                             click: function () {
                                 this.closeModal();
@@ -99,7 +100,7 @@ $extendSessionUrl = $viewModel->getExtendSessionUrl();
                 const originalMessage = $message.text();
 
                 // Show loading state
-                $message.text($.mage.__('Extending your session...'));
+                $message.text($t('Extending your session...'));
 
                 $.ajax({
                     url: $('#session-extend-url').val(),
@@ -111,7 +112,7 @@ $extendSessionUrl = $viewModel->getExtendSessionUrl();
                     success: function(response) {
                         if (response.success) {
                             // Show a success message
-                            $message.text($.mage.__('Session extended successfully!'));
+                            $message.text($t('Session extended successfully!'));
 
                             // Close modal after a short delay
                             setTimeout(function() {
@@ -123,7 +124,7 @@ $extendSessionUrl = $viewModel->getExtendSessionUrl();
                             }, 1500);
                         } else {
                             // Show error message
-                            $message.text(response.message || $.mage.__('Failed to extend session. Please try again.'));
+                            $message.text(response.message || $t('Failed to extend session. Please try again.'));
 
                             // Restore the original message after delay
                             setTimeout(function() {
@@ -133,7 +134,7 @@ $extendSessionUrl = $viewModel->getExtendSessionUrl();
                     },
                     error: function() {
                         // Show error message
-                        $message.text($.mage.__('An error occurred. Please refresh the page.'));
+                        $message.text($t('An error occurred. Please refresh the page.'));
 
                         // Restore the original message after delay
                         setTimeout(function() {
