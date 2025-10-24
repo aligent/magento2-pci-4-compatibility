@@ -4,151 +4,39 @@ declare(strict_types=1);
 use Aligent\Pci4Compatibility\ViewModel\Modal;
 use Magento\Backend\Block\Template;
 use Magento\Framework\Escaper;
+use Magento\Framework\View\Helper\SecureHtmlRenderer;
 
 /**
  * @var Template $block
  * @var Escaper $escaper
+ * @var SecureHtmlRenderer $secureRenderer
  * @var Modal $viewModel
  */
 $viewModel = $block->getViewModel();
-$modalTimeout = $viewModel->getModalPopupTimeout();
 $sessionLifetime = $viewModel->getSessionLifetime();
 $extendSessionUrl = $viewModel->getExtendSessionUrl();
 
 ?>
 
 <div id="session-expire-warning-modal">
-    <p style="font-size:48px;color:#FF0000">&#x26A0;</p>
+    <p class="session-warning-icon">&#x26A0;</p>
     <p id="session-warning-message">
-        <?= __(
+        <?= /* @noEscape */ __(
                 'Your session will expire in one minute. ' .
                 'Please save your changes or extend your session to continue working.'
         ) ?>
     </p>
-    <input type="hidden" id="session-extend-url" value="<?= $escaper->escapeUrl($extendSessionUrl) ?>"/>
-    <input type="hidden" id="session-lifetime" value="<?= $escaper->escapeHtmlAttr((string)$sessionLifetime) ?>"/>
 </div>
+<?= /* @noEscape */ $secureRenderer->renderStyleAsTag('display:none', '#session-expire-warning-modal'); ?>
 
-<script>
-    require(
-        [
-            'jquery',
-            'Magento_Ui/js/modal/modal',
-            'mage/translate'
-        ],
-        function(
-            $,
-            modal,
-            $t
-        ) {
-            let sessionTimeoutHandle = null;
-            const sessionLifetime = parseInt($('#session-lifetime').val()) || 900;
-            const warningOffset = 60; // Show warning 60 seconds before expiry
-
-            /**
-             * Initialize and show the session expiry warning modal
-             */
-            function initSessionWarningModal() {
-                const options = {
-                    type: 'popup',
-                    innerScroll: true,
-                    title: $t('Session Expiring Soon'),
-                    modalClass: 'modal-admintimeout',
-                    buttons: [
-                        {
-                            text: $t('Extend Session'),
-                            class: 'action-primary',
-                            click: function () {
-                                extendSession(this);
-                            }
-                        },
-                        {
-                            text: $t('Close'),
-                            class: 'action-secondary',
-                            click: function () {
-                                this.closeModal();
-                            }
-                        }
-                    ]
-                };
-
-                modal(options, $('#session-expire-warning-modal'));
+<script type="text/x-magento-init">
+    {
+        "#session-expire-warning-modal": {
+            "Aligent_Pci4Compatibility/js/session-expiry-warning": {
+                "sessionLifetime": <?= /* @noEscape */ (int)$sessionLifetime ?>,
+                "extendSessionUrl": "<?= $escaper->escapeUrl($extendSessionUrl) ?>",
+                "formKey": "<?= $escaper->escapeJs($block->getFormKey()) ?>"
             }
-
-            /**
-             * Schedule the session warning modal to appear
-             */
-            function scheduleSessionWarning() {
-                // Clear any existing timeout
-                if (sessionTimeoutHandle) {
-                    clearTimeout(sessionTimeoutHandle);
-                }
-
-                // Calculate delay: (sessionLifetime - warningOffset) * 1000 milliseconds
-                const delay = (sessionLifetime - warningOffset) * 1000;
-
-                sessionTimeoutHandle = setTimeout(function() {
-                    $('#session-expire-warning-modal').modal('openModal');
-                }, delay);
-            }
-
-            /**
-             * Extend the admin session via AJAX
-             */
-            function extendSession(modalContext) {
-                const $message = $('#session-warning-message');
-                const originalMessage = $message.text();
-
-                // Show loading state
-                $message.text($t('Extending your session...'));
-
-                $.ajax({
-                    url: $('#session-extend-url').val(),
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        form_key: window.FORM_KEY
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Show a success message
-                            $message.text($t('Session extended successfully!'));
-
-                            // Close modal after a short delay
-                            setTimeout(function() {
-                                modalContext.closeModal();
-                                $message.text(originalMessage);
-
-                                // Reschedule the warning modal
-                                scheduleSessionWarning();
-                            }, 1500);
-                        } else {
-                            // Show error message
-                            $message.text(response.message || $t('Failed to extend session. Please try again.'));
-
-                            // Restore the original message after delay
-                            setTimeout(function() {
-                                $message.text(originalMessage);
-                            }, 3000);
-                        }
-                    },
-                    error: function() {
-                        // Show error message
-                        $message.text($t('An error occurred. Please refresh the page.'));
-
-                        // Restore the original message after delay
-                        setTimeout(function() {
-                            $message.text(originalMessage);
-                        }, 3000);
-                    }
-                });
-            }
-
-            // Initialize on document ready
-            $(document).ready(function() {
-                initSessionWarningModal();
-                scheduleSessionWarning();
-            });
         }
-    );
+    }
 </script>
