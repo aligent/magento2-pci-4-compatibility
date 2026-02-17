@@ -35,7 +35,8 @@ $extendSessionUrl = $viewModel->getExtendSessionUrl();
             "Aligent_Pci4Compatibility/js/session-expiry-warning": {
                 "sessionLifetime": <?= /* @noEscape */ (int)$sessionLifetime ?>,
                 "extendSessionUrl": "<?= $escaper->escapeUrl($extendSessionUrl) ?>",
-                "formKey": "<?= $escaper->escapeJs($block->getFormKey()) ?>"
+                "formKey": "<?= $escaper->escapeJs($block->getFormKey()) ?>",
+                "loginUrl": "<?= $escaper->escapeUrl($viewModel->getLoginUrl()) ?>"
             }
         }
     }

@@ -59,4 +59,14 @@ class Modal implements ArgumentInterface
     {
         return $this->backendUrl->getUrl('pci4/session/extendsession');
     }
+
+    /**
+     * Get admin login page URL
+     *
+     * @return string
+     */
+    public function getLoginUrl(): string
+    {
+        return $this->backendUrl->getUrl('adminhtml/auth/login');
+    }
 }
