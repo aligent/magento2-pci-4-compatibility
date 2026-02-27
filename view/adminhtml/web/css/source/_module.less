@@ -12,3 +12,14 @@
         display: none !important;
     }
 }
+
+// Ensure session warning modal renders above PageBuilder and HugeRTE editor panels
+body._session-warning-active {
+    .modal-admintimeout {
+        z-index: 9999 !important;
+    }
+
+    .modals-overlay {
+        z-index: 9998 !important;
+    }
+}

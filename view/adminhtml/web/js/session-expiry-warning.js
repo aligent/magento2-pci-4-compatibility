@@ -39,6 +39,12 @@ define([
                 innerScroll: true,
                 title: $t('Session Expiring Soon'),
                 modalClass: 'modal-admintimeout',
+                opened: function () {
+                    $('body').addClass('_session-warning-active');
+                },
+                closed: function () {
+                    $('body').removeClass('_session-warning-active');
+                },
                 buttons: [
                     {
                         text: $t('Extend Session'),
