@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Aligent\Pci4Compatibility\Console;
 
 use Aligent\Pci4Compatibility\Model\DisableInactiveAdminAccounts;
+use Magento\Framework\Console\Cli;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,7 +37,7 @@ class DisableInactiveAccounts extends Command
      *
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return void
+     * @return int
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -44,10 +45,10 @@ class DisableInactiveAccounts extends Command
             $output->writeln(__("Disabling any admin accounts with 90 days of inactivity"));
             $this->disableInactiveAdminAccounts->execute();
             $output->writeln(__("Disabling of accounts complete"));
-            return Command::SUCCESS;
+            return Cli::RETURN_SUCCESS;
         } catch (\Throwable $t) {
-            $output->writeln(__("<error>Error: {$e->getMessage()}</error>"));
-            return Command::FAILURE;
+            $output->writeln(__("<error>Error: {$t->getMessage()}</error>"));
+            return Cli::RETURN_FAILURE;
         }
     }
 }
